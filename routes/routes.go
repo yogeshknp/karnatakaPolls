@@ -9,11 +9,11 @@ import (
 
 func Routes(router *gin.Engine) {
 	router.GET("/", welcome)
-	router.GET("/todos", controllers.GetAllVoters)
-	router.POST("/todo", controllers.CreateVoter)
-	router.GET("/todo/:todoId", controllers.GetSingleVoter)
-	router.PUT("/todo/:todoId", controllers.EditVoter)
-	router.DELETE("/todo/:todoId", controllers.DeleteVoter)
+	router.GET("/voters", controllers.GetAllVoters)
+	router.POST("/voter", controllers.CreateVoter)
+	router.GET("/voter/:voterId", controllers.GetSingleVoter)
+	router.PUT("/voter/:voterId", controllers.EditVoter)
+	router.DELETE("/voter/:voterId", controllers.DeleteVoter)
 	router.NoRoute(notFound)
 }
 func welcome(c *gin.Context) {
