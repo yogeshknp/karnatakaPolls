@@ -11,33 +11,25 @@ import (
 	models "github.com/karnatakaPolls/models"
 )
 
-// Create Voter Table
-func CreateVoterTable(db *pg.DB) error {
+func CreateCandidateTable(db *pg.DB) error {
 	opts := &orm.CreateTableOptions{
 		IfNotExists: true,
 	}
-	createError := db.Model(&models.Voter{}).CreateTable(opts)
+	createError := db.Model(&models.Candidate{}).CreateTable(opts)
 	if createError != nil {
-		log.Printf("Error while creating voter table, Reason: %v\n", createError)
+		log.Printf("Error while creating Candidate table, Reason: %v\n", createError)
 		return createError
 	}
-	log.Printf("Voter table created")
+	log.Printf("Candidate table created")
 	return nil
 }
 
-// INITIALIZE DB CONNECTION (TO AVOID TOO MANY CONNECTION)
-var dbConnect *pg.DB
-
-func InitiateDB(db *pg.DB) {
-	dbConnect = db
-}
-
-func GetAllVoters(c *gin.Context) {
-	var voters []models.Voter
-	err := dbConnect.Model(&voters).Select()
+func GetAllCandidate(c *gin.Context) {
+	var candidates []models.Candidate
+	err := dbConnect.Model(&candidates).Select()
 
 	if err != nil {
-		log.Printf("Error while getting all voters, Reason: %v\n", err)
+		log.Printf("Error while getting all Candidates, Reason: %v\n", err)
 		c.JSON(http.StatusInternalServerError, gin.H{
 			"status":  http.StatusInternalServerError,
 			"message": "Something went wrong",
@@ -47,25 +39,32 @@ func GetAllVoters(c *gin.Context) {
 
 	c.JSON(http.StatusOK, gin.H{
 		"status":  http.StatusOK,
-		"message": "All Voters",
-		"data":    voters,
+		"message": "All Candidates",
+		"data":    candidates,
 	})
 	return
 }
 
-func CreateVoter(c *gin.Context) {
-	var voter models.Voter
-	c.BindJSON(&voter)
-	name := voter.Name
-	aadhaarId := voter.AadhaarID
-	_, insertError := dbConnect.Model(&models.Voter{
-		AadhaarID: aadhaarId,
-		Name:      name,
-		CreatedAt: time.Now(),
-		UpdatedAt: time.Now(),
+func CreateCandidate(c *gin.Context) {
+	var candidate models.Candidate
+	c.BindJSON(&candidate)
+	aadhaarId := candidate.AadhaarID
+	name := candidate.Name
+	constituency := candidate.Constituency
+	party := candidate.Party
+
+	_, insertError := dbConnect.Model(&models.Candidate{
+		AadhaarID:    aadhaarId,
+		Name:         name,
+		Constituency: constituency,
+		Party:        party,
+		Votes:        0,
+		CreatedAt:    time.Now(),
+		UpdatedAt:    time.Now(),
 	}).Insert()
+
 	if insertError != nil {
-		log.Printf("Error while inserting new voter into db, Reason: %v\n", insertError)
+		log.Printf("Error while inserting new candidate into db, Reason: %v\n", insertError)
 		c.JSON(http.StatusInternalServerError, gin.H{
 			"status":  http.StatusInternalServerError,
 			"message": "Something went wrong",
@@ -75,34 +74,12 @@ func CreateVoter(c *gin.Context) {
 
 	c.JSON(http.StatusCreated, gin.H{
 		"status":  http.StatusCreated,
-		"message": "Voter created Successfully",
+		"message": "candidate created Successfully",
 	})
 	return
 }
 
-func GetSingleVoter(c *gin.Context) {
-	voterId := c.Param("voterId")
-	voter := &models.Voter{AadhaarID: voterId}
-	err := dbConnect.Model(voter).WherePK().Select()
-
-	if err != nil {
-		log.Printf("Error while getting a single voter, Reason: %v\n", err)
-		c.JSON(http.StatusNotFound, gin.H{
-			"status":  http.StatusNotFound,
-			"message": "Voter not found",
-		})
-		return
-	}
-
-	c.JSON(http.StatusOK, gin.H{
-		"status":  http.StatusOK,
-		"message": "Single Voter",
-		"data":    voter,
-	})
-	return
-}
-
-func EditVoter(c *gin.Context) {
+func EditCandidate(c *gin.Context) {
 	voterId := c.Param("voterId")
 	var voter models.Voter
 	c.BindJSON(&voter)
@@ -125,7 +102,7 @@ func EditVoter(c *gin.Context) {
 	return
 }
 
-func DeleteVoter(c *gin.Context) {
+func DeleteCandidate(c *gin.Context) {
 	aadhaarId := c.Param("aadhaarId")
 	voter := &models.Voter{AadhaarID: aadhaarId}
 

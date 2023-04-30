@@ -4,12 +4,12 @@ import (
 	"time"
 )
 
-type Voter struct {
+type Candidate struct {
 	AadhaarID    string    `json:"aadhaarId"`
 	Name         string    `json:"name"`
 	Constituency string    `json:"constituency"`
-	Age          int       `json:"age"`
-	VotedTo      string    `json:"votedTo"`
+	Party        string    `json:"party"`
+	Votes        int64     `json:"votes"`
 	CreatedAt    time.Time `json:"created_at"`
 	UpdatedAt    time.Time `json:"updated_at"`
 }
