@@ -1,0 +1,42 @@
+basePath: /polls
+definitions:
+  models.Voter:
+    properties:
+      aadhaarId:
+        type: string
+      age:
+        type: integer
+      constituency:
+        type: string
+      created_at:
+        type: string
+      name:
+        type: string
+      updated_at:
+        type: string
+      votedTo:
+        type: string
+    type: object
+host: localhost:4747
+info:
+  contact: {}
+  description: A polling service API in Go using Gin framework
+  title: Karnataka Polls Assignment
+  version: "1.0"
+paths:
+  /voters:
+    get:
+      description: Get All Voters from Db.
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.Voter'
+            type: array
+      summary: Get All Voters
+      tags:
+      - voters
+swagger: "2.0"

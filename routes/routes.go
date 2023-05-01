@@ -5,23 +5,25 @@ import (
 
 	"github.com/gin-gonic/gin"
 	controllers "github.com/karnatakaPolls/controllers"
+	swaggerFiles "github.com/swaggo/files"
+	ginSwagger "github.com/swaggo/gin-swagger"
 )
 
 func Routes(router *gin.Engine) {
-	router.GET("/", welcome)
-	router.GET("/voters", controllers.GetAllVoters)
-	router.POST("/voter", controllers.CreateVoter)
-	router.GET("/voter/:voterId", controllers.GetSingleVoter)
-	router.PUT("/voter/:voterId", controllers.EditVoter)
-	router.DELETE("/voter/:voterId", controllers.DeleteVoter)
-	router.NoRoute(notFound)
+	pollsRouter := router.Group("/polls")
+	pollsRouter.GET("/docs/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
+	pollsRouter.GET("/", welcome)
+	pollsRouter.GET("/voters", controllers.GetAllVoters)
+	pollsRouter.POST("/voter", controllers.CreateVoter)
+	pollsRouter.GET("/voter/:voterId", controllers.GetSingleVoter)
+	pollsRouter.PUT("/voter/:voterId", controllers.EditVoter)
+	pollsRouter.DELETE("/voter/:voterId", controllers.DeleteVoter)
 }
 func welcome(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{
 		"status":  200,
 		"message": "Welcome To API",
 	})
-	return
 }
 
 func notFound(c *gin.Context) {
@@ -29,5 +31,4 @@ func notFound(c *gin.Context) {
 		"status":  404,
 		"message": "Route Not Found",
 	})
-	return
 }

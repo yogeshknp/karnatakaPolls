@@ -1,0 +1,64 @@
+{
+    "swagger": "2.0",
+    "info": {
+        "description": "A polling service API in Go using Gin framework",
+        "title": "Karnataka Polls Assignment",
+        "contact": {},
+        "version": "1.0"
+    },
+    "host": "localhost:4747",
+    "basePath": "/polls",
+    "paths": {
+        "/voters": {
+            "get": {
+                "description": "Get All Voters from Db.",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "voters"
+                ],
+                "summary": "Get All Voters",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/models.Voter"
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "definitions": {
+        "models.Voter": {
+            "type": "object",
+            "properties": {
+                "aadhaarId": {
+                    "type": "string"
+                },
+                "age": {
+                    "type": "integer"
+                },
+                "constituency": {
+                    "type": "string"
+                },
+                "created_at": {
+                    "type": "string"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "updated_at": {
+                    "type": "string"
+                },
+                "votedTo": {
+                    "type": "string"
+                }
+            }
+        }
+    }
+}

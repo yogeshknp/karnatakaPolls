@@ -42,7 +42,6 @@ func GetAllCandidate(c *gin.Context) {
 		"message": "All Candidates",
 		"data":    candidates,
 	})
-	return
 }
 
 func CreateCandidate(c *gin.Context) {
@@ -76,7 +75,6 @@ func CreateCandidate(c *gin.Context) {
 		"status":  http.StatusCreated,
 		"message": "candidate created Successfully",
 	})
-	return
 }
 
 func EditCandidate(c *gin.Context) {
@@ -99,7 +97,6 @@ func EditCandidate(c *gin.Context) {
 		"status":  200,
 		"message": "Voter Edited Successfully",
 	})
-	return
 }
 
 func DeleteCandidate(c *gin.Context) {
@@ -120,5 +117,4 @@ func DeleteCandidate(c *gin.Context) {
 		"status":  http.StatusOK,
 		"message": "Voter deleted successfully",
 	})
-	return
 }

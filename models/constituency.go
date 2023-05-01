@@ -6,9 +6,9 @@ import (
 
 type Constituency struct {
 	ConstituencyID   int       `json:"constituencyID"`
-	ConstituencyName string    `json:"ConstituencyName"`
+	ConstituencyName string    `json:"constituencyName"`
 	TotalVoters      int64     `json:"totalVoters"`
-	TotalCandidates  int       `json:"TotalCandidates"`
+	TotalCandidates  int       `json:"totalCandidates"`
 	WinnerId         int       `json:"WinnerId"`
 	CreatedAt        time.Time `json:"created_at"`
 	UpdatedAt        time.Time `json:"updated_at"`

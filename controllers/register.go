@@ -32,6 +32,13 @@ func InitiateDB(db *pg.DB) {
 	dbConnect = db
 }
 
+// GetAllVoters		godoc
+// @Summary			Get All Voters
+// @Description		Get All Voters from Db.
+// @Produce			application/json
+// @Tags			voters
+// @Success			200 {object} []models.Voter
+// @Router			/voters [get]
 func GetAllVoters(c *gin.Context) {
 	var voters []models.Voter
 	err := dbConnect.Model(&voters).Select()
@@ -50,7 +57,6 @@ func GetAllVoters(c *gin.Context) {
 		"message": "All Voters",
 		"data":    voters,
 	})
-	return
 }
 
 func CreateVoter(c *gin.Context) {
@@ -77,7 +83,6 @@ func CreateVoter(c *gin.Context) {
 		"status":  http.StatusCreated,
 		"message": "Voter created Successfully",
 	})
-	return
 }
 
 func GetSingleVoter(c *gin.Context) {
@@ -99,7 +104,6 @@ func GetSingleVoter(c *gin.Context) {
 		"message": "Single Voter",
 		"data":    voter,
 	})
-	return
 }
 
 func EditVoter(c *gin.Context) {
@@ -122,7 +126,6 @@ func EditVoter(c *gin.Context) {
 		"status":  200,
 		"message": "Voter Edited Successfully",
 	})
-	return
 }
 
 func DeleteVoter(c *gin.Context) {
@@ -143,5 +146,4 @@ func DeleteVoter(c *gin.Context) {
 		"status":  http.StatusOK,
 		"message": "Voter deleted successfully",
 	})
-	return
 }
