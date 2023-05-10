@@ -24,6 +24,13 @@ func CreateCandidateTable(db *pg.DB) error {
 	return nil
 }
 
+// GetAllCandidate		godoc
+// @Summary			GetAllCandidate
+// @Description		GetAllCandidate from Db.
+// @Produce			application/json
+// @Tags			Candidate
+// @Success			200 {object} []models.Candidate
+// @Router			/candidates [get]
 func GetAllCandidate(c *gin.Context) {
 	var candidates []models.Candidate
 	err := dbConnect.Model(&candidates).Select()
@@ -44,23 +51,21 @@ func GetAllCandidate(c *gin.Context) {
 	})
 }
 
+// CreateCandidate		godoc
+// @Summary			CreateCandidate
+// @Description		CreateCandidate or register a new Candidate
+// @Produce			application/json
+// @Param 			Candidate body models.Candidate true "Candidate details"
+// @Tags			Candidate
+// @Success			200
+// @Router			/candidate [post]
 func CreateCandidate(c *gin.Context) {
 	var candidate models.Candidate
 	c.BindJSON(&candidate)
-	aadhaarId := candidate.AadhaarID
-	name := candidate.Name
-	constituency := candidate.Constituency
-	party := candidate.Party
-
-	_, insertError := dbConnect.Model(&models.Candidate{
-		AadhaarID:    aadhaarId,
-		Name:         name,
-		Constituency: constituency,
-		Party:        party,
-		Votes:        0,
-		CreatedAt:    time.Now(),
-		UpdatedAt:    time.Now(),
-	}).Insert()
+	candidate.Votes = 0
+	candidate.CreatedAt = time.Now()
+	candidate.UpdatedAt = time.Now()
+	_, insertError := dbConnect.Model(&candidate).Insert()
 
 	if insertError != nil {
 		log.Printf("Error while inserting new candidate into db, Reason: %v\n", insertError)
@@ -77,13 +82,51 @@ func CreateCandidate(c *gin.Context) {
 	})
 }
 
-func EditCandidate(c *gin.Context) {
-	voterId := c.Param("voterId")
-	var voter models.Voter
-	c.BindJSON(&voter)
-	name := c.Param("name")
+// GetSingleCandidate	godoc
+// @Summary			Get Single Candidate
+// @Description		Get Single Candidate
+// @Produce			application/json
+// @Param 			AadhaarID path string true "Aadhaar ID"
+// @Tags			Candidate
+// @Success			200
+// @Router			/candidate/{AadhaarID} [get]
+func GetSingleCandidate(c *gin.Context) {
+	aadhaarID := c.Param("AadhaarID")
+	candidate := &models.Candidate{AadhaarID: aadhaarID}
+	err := dbConnect.Model(candidate).WherePK().Select()
 
-	_, err := dbConnect.Model(&models.Voter{}).Set("name = ?", name).Where("id = ?", voterId).Update()
+	if err != nil {
+		log.Printf("Error while getting a single candidate, Reason: %v\n", err)
+		c.JSON(http.StatusNotFound, gin.H{
+			"status":  http.StatusNotFound,
+			"message": "Candidate not found",
+		})
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{
+		"status":  http.StatusOK,
+		"message": "Single Candidate",
+		"data":    candidate,
+	})
+}
+
+// EditCandidate	godoc
+// @Summary			Edit Candidate
+// @Description		Edit Candidate
+// @Produce			application/json
+// @Param 			AadhaarID path string true "Aadhaar ID"
+// @Param 			Candidate body models.Candidate true "Candidate details"
+// @Tags			Candidate
+// @Success			200
+// @Router			/candidate/{AadhaarID} [put]
+func EditCandidate(c *gin.Context) {
+	var candidate models.Candidate
+	c.BindJSON(&candidate)
+	candidate.AadhaarID = c.Param("aadhaarID")
+	candidate.UpdatedAt = time.Now()
+
+	_, err := dbConnect.Model(&candidate).WherePK().Update()
 	if err != nil {
 		log.Printf("Error, Reason: %v\n", err)
 		c.JSON(http.StatusInternalServerError, gin.H{
@@ -95,17 +138,25 @@ func EditCandidate(c *gin.Context) {
 
 	c.JSON(http.StatusOK, gin.H{
 		"status":  200,
-		"message": "Voter Edited Successfully",
+		"message": "Candidate Edited Successfully",
 	})
 }
 
+// DeleteCandidate	godoc
+// @Summary			Delete Candidate
+// @Description		Delete Candidate
+// @Produce			application/json
+// @Param 			AadhaarID path string true "Aadhaar ID"
+// @Tags			Candidate
+// @Success			200
+// @Router			/candidate/{AadhaarID} [delete]
 func DeleteCandidate(c *gin.Context) {
 	aadhaarId := c.Param("aadhaarId")
-	voter := &models.Voter{AadhaarID: aadhaarId}
+	candidate := &models.Candidate{AadhaarID: aadhaarId}
 
-	_, err := dbConnect.Model(voter).WherePK().Delete()
+	_, err := dbConnect.Model(candidate).WherePK().Delete()
 	if err != nil {
-		log.Printf("Error while deleting a single voter, Reason: %v\n", err)
+		log.Printf("Error while deleting a single candidate, Reason: %v\n", err)
 		c.JSON(http.StatusInternalServerError, gin.H{
 			"status":  http.StatusInternalServerError,
 			"message": "Something went wrong",
@@ -115,6 +166,6 @@ func DeleteCandidate(c *gin.Context) {
 
 	c.JSON(http.StatusOK, gin.H{
 		"status":  http.StatusOK,
-		"message": "Voter deleted successfully",
+		"message": "Candidate deleted successfully",
 	})
 }

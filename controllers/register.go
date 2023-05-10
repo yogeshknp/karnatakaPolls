@@ -36,7 +36,7 @@ func InitiateDB(db *pg.DB) {
 // @Summary			Get All Voters
 // @Description		Get All Voters from Db.
 // @Produce			application/json
-// @Tags			voters
+// @Tags			voter
 // @Success			200 {object} []models.Voter
 // @Router			/voters [get]
 func GetAllVoters(c *gin.Context) {
@@ -52,24 +52,25 @@ func GetAllVoters(c *gin.Context) {
 		return
 	}
 
-	c.JSON(http.StatusOK, gin.H{
-		"status":  http.StatusOK,
-		"message": "All Voters",
-		"data":    voters,
-	})
+	c.JSON(http.StatusOK, voters)
 }
 
+// CreateVoter		godoc
+// @Summary			Create Voter
+// @Description		Create Voter or register a new voter
+// @Produce			application/json
+// @Param 			voter body models.Voter true "voter details"
+// @Tags			voter
+// @Success			200
+// @Router			/voter [post]
 func CreateVoter(c *gin.Context) {
 	var voter models.Voter
 	c.BindJSON(&voter)
-	name := voter.Name
-	aadhaarId := voter.AadhaarID
-	_, insertError := dbConnect.Model(&models.Voter{
-		AadhaarID: aadhaarId,
-		Name:      name,
-		CreatedAt: time.Now(),
-		UpdatedAt: time.Now(),
-	}).Insert()
+	voter.CreatedAt = time.Now()
+	voter.UpdatedAt = time.Now()
+
+	_, insertError := dbConnect.Model(&voter).Insert()
+
 	if insertError != nil {
 		log.Printf("Error while inserting new voter into db, Reason: %v\n", insertError)
 		c.JSON(http.StatusInternalServerError, gin.H{
@@ -85,9 +86,17 @@ func CreateVoter(c *gin.Context) {
 	})
 }
 
+// GetSingleVoter		godoc
+// @Summary			Get Single Voter
+// @Description		Get Single Voter
+// @Produce			application/json
+// @Param 			AadhaarID path string true "Aadhaar ID"
+// @Tags			voter
+// @Success			200
+// @Router			/voter/{AadhaarID} [get]
 func GetSingleVoter(c *gin.Context) {
-	voterId := c.Param("voterId")
-	voter := &models.Voter{AadhaarID: voterId}
+	aadhaarID := c.Param("AadhaarID")
+	voter := &models.Voter{AadhaarID: aadhaarID}
 	err := dbConnect.Model(voter).WherePK().Select()
 
 	if err != nil {
@@ -106,13 +115,22 @@ func GetSingleVoter(c *gin.Context) {
 	})
 }
 
+// EditVoter		godoc
+// @Summary			Edit Voter
+// @Description		Edit Voter
+// @Produce			application/json
+// @Param 			AadhaarID path string true "Aadhaar ID"
+// @Param 			voter body models.Voter true "voter details"
+// @Tags			voter
+// @Success			200
+// @Router			/voter/{AadhaarID} [put]
 func EditVoter(c *gin.Context) {
-	voterId := c.Param("voterId")
 	var voter models.Voter
 	c.BindJSON(&voter)
-	name := c.Param("name")
+	voter.AadhaarID = c.Param("aadhaarID")
+	voter.UpdatedAt = time.Now()
 
-	_, err := dbConnect.Model(&models.Voter{}).Set("name = ?", name).Where("id = ?", voterId).Update()
+	_, err := dbConnect.Model(&voter).WherePK().Update()
 	if err != nil {
 		log.Printf("Error, Reason: %v\n", err)
 		c.JSON(http.StatusInternalServerError, gin.H{
@@ -128,6 +146,14 @@ func EditVoter(c *gin.Context) {
 	})
 }
 
+// DeleteVoter		godoc
+// @Summary			Delete Voter
+// @Description		Delete Voter
+// @Produce			application/json
+// @Param 			AadhaarID path string true "Aadhaar ID"
+// @Tags			voter
+// @Success			200
+// @Router			/voter/{AadhaarID} [delete]
 func DeleteVoter(c *gin.Context) {
 	aadhaarId := c.Param("aadhaarId")
 	voter := &models.Voter{AadhaarID: aadhaarId}

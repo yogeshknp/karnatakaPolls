@@ -1,18 +1,50 @@
 basePath: /polls
 definitions:
+  models.Candidate:
+    properties:
+      aadhaarID:
+        type: string
+      constituency:
+        $ref: '#/definitions/models.Constituency'
+      createdAt:
+        type: string
+      name:
+        type: string
+      party:
+        type: string
+      updatedAt:
+        type: string
+      votes:
+        type: integer
+    type: object
+  models.Constituency:
+    properties:
+      constituencyName:
+        type: string
+      createdAt:
+        type: string
+      totalCandidates:
+        type: integer
+      totalVoters:
+        type: integer
+      updatedAt:
+        type: string
+      winnerId:
+        type: integer
+    type: object
   models.Voter:
     properties:
-      aadhaarId:
+      aadhaarID:
         type: string
       age:
         type: integer
       constituency:
-        type: string
-      created_at:
+        $ref: '#/definitions/models.Constituency'
+      createdAt:
         type: string
       name:
         type: string
-      updated_at:
+      updatedAt:
         type: string
       votedTo:
         type: string
@@ -24,6 +56,277 @@ info:
   title: Karnataka Polls Assignment
   version: "1.0"
 paths:
+  /candidate:
+    post:
+      description: CreateCandidate or register a new Candidate
+      parameters:
+      - description: Candidate details
+        in: body
+        name: Candidate
+        required: true
+        schema:
+          $ref: '#/definitions/models.Candidate'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+      summary: CreateCandidate
+      tags:
+      - Candidate
+  /candidate/{AadhaarID}:
+    delete:
+      description: Delete Candidate
+      parameters:
+      - description: Aadhaar ID
+        in: path
+        name: AadhaarID
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+      summary: Delete Candidate
+      tags:
+      - Candidate
+    get:
+      description: Get Single Candidate
+      parameters:
+      - description: Aadhaar ID
+        in: path
+        name: AadhaarID
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+      summary: Get Single Candidate
+      tags:
+      - Candidate
+    put:
+      description: Edit Candidate
+      parameters:
+      - description: Aadhaar ID
+        in: path
+        name: AadhaarID
+        required: true
+        type: string
+      - description: Candidate details
+        in: body
+        name: Candidate
+        required: true
+        schema:
+          $ref: '#/definitions/models.Candidate'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+      summary: Edit Candidate
+      tags:
+      - Candidate
+  /candidates:
+    get:
+      description: GetAllCandidate from Db.
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.Candidate'
+            type: array
+      summary: GetAllCandidate
+      tags:
+      - Candidate
+  /constituencies:
+    get:
+      description: Get All Constituency from Db.
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.Constituency'
+            type: array
+      summary: Get All Constituency
+      tags:
+      - Constituency
+  /constituency:
+    post:
+      description: Create Constituency or register a new Constituency
+      parameters:
+      - description: Constituency details
+        in: body
+        name: constituency
+        required: true
+        schema:
+          $ref: '#/definitions/models.Constituency'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+      summary: Create Constituency
+      tags:
+      - Constituency
+  /constituency/{name}:
+    delete:
+      description: Delete Constituency
+      parameters:
+      - description: Constituency Name
+        in: path
+        name: name
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+      summary: Delete Constituency
+      tags:
+      - Constituency
+    get:
+      description: Get Single Constituency
+      parameters:
+      - description: Aadhaar ID
+        in: path
+        name: AadhaarID
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+      summary: Get Single Constituency
+      tags:
+      - Constituency
+    put:
+      description: Edit Constituency
+      parameters:
+      - description: Constituency Name
+        in: path
+        name: name
+        required: true
+        type: string
+      - description: Constituency details
+        in: body
+        name: voter
+        required: true
+        schema:
+          $ref: '#/definitions/models.Constituency'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+      summary: Edit Constituency
+      tags:
+      - Constituency
+  /vote/{VoterAadhaarID}/{CanAadhaarID}:
+    put:
+      description: Edit Voter
+      parameters:
+      - description: Aadhaar ID of Voter
+        in: path
+        name: AadhaarID
+        required: true
+        type: string
+      - description: Aadhaar ID of Candidate
+        in: path
+        name: AadhaarID
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+      summary: Edit Voter
+      tags:
+      - Voting
+  /voter:
+    post:
+      description: Create Voter or register a new voter
+      parameters:
+      - description: voter details
+        in: body
+        name: voter
+        required: true
+        schema:
+          $ref: '#/definitions/models.Voter'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+      summary: Create Voter
+      tags:
+      - voter
+  /voter/{AadhaarID}:
+    delete:
+      description: Delete Voter
+      parameters:
+      - description: Aadhaar ID
+        in: path
+        name: AadhaarID
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+      summary: Delete Voter
+      tags:
+      - voter
+    get:
+      description: Get Single Voter
+      parameters:
+      - description: Aadhaar ID
+        in: path
+        name: AadhaarID
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+      summary: Get Single Voter
+      tags:
+      - voter
+    put:
+      description: Edit Voter
+      parameters:
+      - description: Aadhaar ID
+        in: path
+        name: AadhaarID
+        required: true
+        type: string
+      - description: voter details
+        in: body
+        name: voter
+        required: true
+        schema:
+          $ref: '#/definitions/models.Voter'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+      summary: Edit Voter
+      tags:
+      - voter
   /voters:
     get:
       description: Get All Voters from Db.
@@ -38,5 +341,5 @@ paths:
             type: array
       summary: Get All Voters
       tags:
-      - voters
+      - voter
 swagger: "2.0"

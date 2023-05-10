@@ -5,13 +5,13 @@ import (
 )
 
 type Voter struct {
-	AadhaarID    string    `json:"aadhaarId"`
-	Name         string    `json:"name"`
-	Constituency string    `json:"constituency"`
-	Age          int       `json:"age"`
-	VotedTo      string    `json:"votedTo"`
-	CreatedAt    time.Time `json:"created_at"`
-	UpdatedAt    time.Time `json:"updated_at"`
+	AadhaarID    string        `pg:"aadhaar_id,pk"`
+	Name         string        `pg:"name"`
+	Constituency *Constituency `pg:"constituency,rel:has-one,fk:constituency"`
+	Age          int           `pg:"age"`
+	VotedTo      string        `pg:"votedTo"`
+	CreatedAt    time.Time     `pg:"created_at"`
+	UpdatedAt    time.Time     `pg:"updated_at"`
 }
 
 // 1. Voters: Name, Adharcard number, constituency, votedTo,

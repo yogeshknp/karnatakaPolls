@@ -21,9 +21,11 @@ func Connect() *pg.DB {
 		log.Printf("Failed to connect")
 		os.Exit(100)
 	}
+
 	log.Printf("Connected to db")
 	controllers.InitiateDB(db)
 	controllers.CreateVoterTable(db)
 	controllers.CreateCandidateTable(db)
+	controllers.CreateConstituencyTable(db)
 	return db
 }

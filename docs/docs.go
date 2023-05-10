@@ -16,6 +16,418 @@ const docTemplate = `{
     "host": "{{.Host}}",
     "basePath": "{{.BasePath}}",
     "paths": {
+        "/candidate": {
+            "post": {
+                "description": "CreateCandidate or register a new Candidate",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Candidate"
+                ],
+                "summary": "CreateCandidate",
+                "parameters": [
+                    {
+                        "description": "Candidate details",
+                        "name": "Candidate",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/models.Candidate"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    }
+                }
+            }
+        },
+        "/candidate/{AadhaarID}": {
+            "get": {
+                "description": "Get Single Candidate",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Candidate"
+                ],
+                "summary": "Get Single Candidate",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Aadhaar ID",
+                        "name": "AadhaarID",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    }
+                }
+            },
+            "put": {
+                "description": "Edit Candidate",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Candidate"
+                ],
+                "summary": "Edit Candidate",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Aadhaar ID",
+                        "name": "AadhaarID",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "description": "Candidate details",
+                        "name": "Candidate",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/models.Candidate"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    }
+                }
+            },
+            "delete": {
+                "description": "Delete Candidate",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Candidate"
+                ],
+                "summary": "Delete Candidate",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Aadhaar ID",
+                        "name": "AadhaarID",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    }
+                }
+            }
+        },
+        "/candidates": {
+            "get": {
+                "description": "GetAllCandidate from Db.",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Candidate"
+                ],
+                "summary": "GetAllCandidate",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/models.Candidate"
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/constituencies": {
+            "get": {
+                "description": "Get All Constituency from Db.",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Constituency"
+                ],
+                "summary": "Get All Constituency",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/models.Constituency"
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/constituency": {
+            "post": {
+                "description": "Create Constituency or register a new Constituency",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Constituency"
+                ],
+                "summary": "Create Constituency",
+                "parameters": [
+                    {
+                        "description": "Constituency details",
+                        "name": "constituency",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/models.Constituency"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    }
+                }
+            }
+        },
+        "/constituency/{name}": {
+            "get": {
+                "description": "Get Single Constituency",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Constituency"
+                ],
+                "summary": "Get Single Constituency",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Aadhaar ID",
+                        "name": "AadhaarID",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    }
+                }
+            },
+            "put": {
+                "description": "Edit Constituency",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Constituency"
+                ],
+                "summary": "Edit Constituency",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Constituency Name",
+                        "name": "name",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "description": "Constituency details",
+                        "name": "voter",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/models.Constituency"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    }
+                }
+            },
+            "delete": {
+                "description": "Delete Constituency",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Constituency"
+                ],
+                "summary": "Delete Constituency",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Constituency Name",
+                        "name": "name",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    }
+                }
+            }
+        },
+        "/vote/{VoterAadhaarID}/{CanAadhaarID}": {
+            "put": {
+                "description": "Edit Voter",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Voting"
+                ],
+                "summary": "Edit Voter",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Aadhaar ID of Voter",
+                        "name": "AadhaarID",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Aadhaar ID of Candidate",
+                        "name": "AadhaarID",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    }
+                }
+            }
+        },
+        "/voter": {
+            "post": {
+                "description": "Create Voter or register a new voter",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "voter"
+                ],
+                "summary": "Create Voter",
+                "parameters": [
+                    {
+                        "description": "voter details",
+                        "name": "voter",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/models.Voter"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    }
+                }
+            }
+        },
+        "/voter/{AadhaarID}": {
+            "get": {
+                "description": "Get Single Voter",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "voter"
+                ],
+                "summary": "Get Single Voter",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Aadhaar ID",
+                        "name": "AadhaarID",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    }
+                }
+            },
+            "put": {
+                "description": "Edit Voter",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "voter"
+                ],
+                "summary": "Edit Voter",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Aadhaar ID",
+                        "name": "AadhaarID",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "description": "voter details",
+                        "name": "voter",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/models.Voter"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    }
+                }
+            },
+            "delete": {
+                "description": "Delete Voter",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "voter"
+                ],
+                "summary": "Delete Voter",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Aadhaar ID",
+                        "name": "AadhaarID",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    }
+                }
+            }
+        },
         "/voters": {
             "get": {
                 "description": "Get All Voters from Db.",
@@ -23,7 +435,7 @@ const docTemplate = `{
                     "application/json"
                 ],
                 "tags": [
-                    "voters"
+                    "voter"
                 ],
                 "summary": "Get All Voters",
                 "responses": {
@@ -41,25 +453,74 @@ const docTemplate = `{
         }
     },
     "definitions": {
+        "models.Candidate": {
+            "type": "object",
+            "properties": {
+                "aadhaarID": {
+                    "type": "string"
+                },
+                "constituency": {
+                    "$ref": "#/definitions/models.Constituency"
+                },
+                "createdAt": {
+                    "type": "string"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "party": {
+                    "type": "string"
+                },
+                "updatedAt": {
+                    "type": "string"
+                },
+                "votes": {
+                    "type": "integer"
+                }
+            }
+        },
+        "models.Constituency": {
+            "type": "object",
+            "properties": {
+                "constituencyName": {
+                    "type": "string"
+                },
+                "createdAt": {
+                    "type": "string"
+                },
+                "totalCandidates": {
+                    "type": "integer"
+                },
+                "totalVoters": {
+                    "type": "integer"
+                },
+                "updatedAt": {
+                    "type": "string"
+                },
+                "winnerId": {
+                    "type": "integer"
+                }
+            }
+        },
         "models.Voter": {
             "type": "object",
             "properties": {
-                "aadhaarId": {
+                "aadhaarID": {
                     "type": "string"
                 },
                 "age": {
                     "type": "integer"
                 },
                 "constituency": {
-                    "type": "string"
+                    "$ref": "#/definitions/models.Constituency"
                 },
-                "created_at": {
+                "createdAt": {
                     "type": "string"
                 },
                 "name": {
                     "type": "string"
                 },
-                "updated_at": {
+                "updatedAt": {
                     "type": "string"
                 },
                 "votedTo": {
